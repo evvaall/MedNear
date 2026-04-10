@@ -1,0 +1,141 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #dde7f3;
+}
+.auth-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.auth-form {
+    background: #f5f5f5;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 40%;
+    text-align: center;
+    padding: 0 20px;
+    height: 100%;
+}
+h3{
+    color: #0b3b3e;
+}
+.auth-form button{
+    margin: 10px;
+    margin-bottom: 10px;
+    width: calc(100% - 70px);
+}
+.btn-auth {
+    width: 100%;
+    padding: 12px;
+    background-color: #0b3b3e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 0px 0px 7px rgba(0, 128, 0, 0.178);
+}
+.main-screen{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:  calc(90% - 20px);
+    height: calc(70vh - 20px);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    margin: 60px;
+}
+.welcome{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 50%;
+    height: 100%;
+    background-color: #0b3b3e;
+    color: #f5f5f5;
+    border-radius: 12px 0px 0px 12px;
+    padding: 20px;
+}
+.div-central{
+    height: 60%;
+    display: grid;
+}
+p,  h1, h2, label{
+    margin-bottom: 0;
+}
+p{
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+.welcome button{
+    background-color: #0b3b3e;
+    height: 30px;
+    border-radius: 8px;
+    border-color: transparent;
+    color: #f5f5f5;
+    font-weight: bold;
+    box-shadow: 0px 0px 0px 8px #ffffff57; 
+    cursor: pointer;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.welcome button:hover, .btn-auth:hover{
+    color: #cc7f0e;
+}
+.log-in{
+    background-color: #f5f5f5;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border-radius: 0px 12px 12px 0px;
+    padding: 20px;
+}
+.log-in p, .log-in h2, .log-in label{
+    color: #0b3b3e;
+}
+.log-in p{
+    text-align: center;
+}
+input{
+    width: 90%;
+    height: 30px;
+    background-color: #dde7f3;
+    margin: 5px 0;
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-color: transparent;
+    color: #0b3b3e;
+}
+.log-in input:hover{
+    border: 1px solid #0b3b3e;
+}
+
+@media screen and (max-width:778px) {
+    .auth-form{
+        width: 80%;
+    }
+    .main-screen{
+        width:  80%;
+        margin: 20px;
+    }
+    input{
+        width: 90%;
+    }
+}
+@media screen and (max-width:600px) {
+    .welcome{
+        display: none;
+    }
+    .log-in{
+        width: 100%;
+        border-radius: 12px;
+    }
+}

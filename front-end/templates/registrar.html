@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faça log in</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='registrar.css') }}">
+</head>
+<body>       
+    <div class="auth-container">
+    <form action="{{ url_for('registrar') }}" method="POST" class="auth-form">
+        <h3>Criar Conta Farmácia</h3>
+        <input type="text" name="nome_farmacia" placeholder="Nome da Farmácia" required>
+        <input type="email" name="email" placeholder="E-mail da Farmácia" required>
+        <input type="text" name="telefone" placeholder="Telefone/Whatsapp" required>
+        <input type="text" name="licenca" placeholder="Nº de NIF / Licença" required>
+        <input type="text" name="localizacao" placeholder="Localização" required>
+        <input type="password" name="password" placeholder="Criar Palavra-passe" required>
+        <input type="password" name="confirm_password" placeholder="Confirmar Palavra-passe" required>
+        <button type="submit" class="btn-auth">Registar Farmácia</button>
+        <p class="footer-auth" style="cursor: pointer;">Já tem conta? <a href="{{url_for('login')}}"> Entrar aqui</a></p>
+    </form>
+    </div>
+</body>
+</html>

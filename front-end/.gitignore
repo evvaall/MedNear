@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+venv/
+.vscode/
+instance/
+# Se quiser recomeçar o banco no servidor, ignore o .db:
+mednear.db
