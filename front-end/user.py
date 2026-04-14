@@ -8,10 +8,10 @@ from base_dados.db import base
 from models import Farmacia, Medicamento, Historia, Vendas
 from sqlalchemy import func
 from relatorios import GerarRelatorios
-
+import os 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mednear.db"
-app.config["SECRET_KEY"] = "805080"
+app.config["SECRET_KEY"] = os.getenv("SERCRET_KEY")
 app.config["LOGIN_VIEW"] = "login"
 base.init_app(app)
 
