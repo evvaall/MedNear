@@ -1,6 +1,9 @@
 import smtplib
 from email.message import EmailMessage
 import re
+
+git = "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"
+
 def enviar_notificacao_lead(nome_cliente, contacto_cliente, interesse_cliente):
     meu_email = "evaall283@gmail.com"
     minha_senha = "fvwklzagrflecckj"
