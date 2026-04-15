@@ -4,6 +4,4 @@ __pycache__/
 venv/
 .vscode/
 instance/
-# Se quiser recomeçar o banco no servidor, ignore o .db:
-mednear.db
 .venv
