@@ -6,3 +6,4 @@ venv/
 instance/
 # Se quiser recomeçar o banco no servidor, ignore o .db:
 mednear.db
+.venv
