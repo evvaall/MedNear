@@ -16,11 +16,13 @@ load_dotenv()
 
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mednear.db"
+uri = os.getenv("DATABASE_URL", "sqlite:///mednear.db")
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = uri
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["LOGIN_VIEW"] = "login"
 base.init_app(app)
-
 migrate = Migrate(app, base)
 login_manager = LoginManager()
 login_manager.init_app(app)
