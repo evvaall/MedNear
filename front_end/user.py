@@ -165,7 +165,7 @@ def stock():
             novo_midicamento = Medicamento(nome=nome, categoria=categoria, preço=preco, quantidade=qnt, validade=validade, user_id=current_user.id)
             base.session.add(novo_midicamento)
             base.session.commit()
-            log(acao=f"{session.get("funcionario_nome")} adicionou {qnt}unid. de {nome}", tipo="Entrada")
+            log(acao=f"{session.get('funcionario_nome')} adicionou {qnt}unid. de {nome}", tipo="Entrada")
         except:
             pass
     if request.method == "DELETE":
@@ -197,7 +197,7 @@ def estatistics():
                 registro_de_vendidos = Vendas(nome=nome_medicamento, hora=datetime.now().strftime("%H:%M:%S"), quantidade=quantidade, user_id=current_user.id, data=date.today(), obs=obs, preço=preco, categoria=medicamento.categoria, adicionado_por_id=session.get("funcionario_id"), funcionario=funionario)
                 base.session.add(registro_de_vendidos)
                 base.session.commit()
-                log(f"{session.get("funcionario_nome")} vendeu {quantidade}unid. de {nome_medicamento}", "Venda")
+                log(f"{session.get('funcionario_nome')} vendeu {quantidade}unid. de {nome_medicamento}", "Venda")
     att = base.session.query(
         Medicamento.categoria,
         func.count(Medicamento.id).label('total_tipos'),
