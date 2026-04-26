@@ -1,0 +1,153 @@
+.content{
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0;
+    padding: 10px;
+    width: 75%;
+    height: 530px;
+}
+.tabela{
+    width: 680px;
+    height:100%;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 0px 8px #ffffff57;
+    color: #0b3b3e;
+}
+.tabela table{
+    border-collapse: collapse;
+    width: 100%;
+    color: #0b3b3e;
+    font-size: 13px;
+}
+.tabela thead{
+    background-color: #0b3b3e;
+    color: #fff;
+    font-weight: normal;
+}
+.tabela tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.tabela tbody tr:hover {
+    background-color:  #cbdcf3 !important;
+}
+.tabela td, .tabela th{
+    padding: 8px, 12px;
+    text-align: left;
+    width: 100px;
+    text-align: center;
+    border: 1px solid #d0d0d0;
+}
+.sale{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 240px;
+    height: 100px;
+    gap: 5px;
+}
+.filtro{
+    width: 50px;
+    height: 50px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #cc7f0e;
+    font-size: 10px;
+    font-weight: bold;
+    color: #f5f5f5;
+    border-color: transparent;
+    cursor: pointer;
+}
+.filtro-vender:hover{
+    color: #cc7f0e;
+    transform: translateY(1px);
+
+}
+.filtro:hover{
+    transform: translateY(1px);
+}
+.filtro-vender{
+    width: 120px;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    background-color: #0b3b3e;
+    font-weight: bold;
+    color: #f5f5f5;
+    border-color: transparent;
+    cursor: pointer;
+}
+.preco{
+    text-align: center;
+}
+.opcoes{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    margin: 0px;
+    height: 530px;
+    gap: 20px;
+    padding-right: 10px;
+}
+.caixa-2{
+    background-color: #ffffff;
+    box-shadow: 0px 0px 0px 8px #ffffff57; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 240px;
+    height: 250px;
+}
+.caixa-2 form{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0px;
+}
+form h3{
+    margin: 0px;
+    color: #0b3b3e;
+}
+form button{
+    width: 100%;
+    color: #f5f5f5;
+    background-color: #0b3b3e;
+    border-color: transparent;
+    cursor: pointer;
+    font-weight: bold;
+}
+form button:hover{
+    color: #cc7f0e;
+    cursor: pointer;
+    transform: translateY(1px);
+}
+.caixa-3{
+    background-color: #ffffff;
+    box-shadow: 0px 0px 0px 8px #ffffff57; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 240px;
+    height: 100px;
+    padding-bottom: 10px;
+}
+.caixa-3 form{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0px;
+    text-align: center;
+}
+.entry{
+    width: 211px;
+    position: relative;
+    top: 5px;
+}
+
