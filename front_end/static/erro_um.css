@@ -1,0 +1,19 @@
+body{
+    background-color: #f5f5f5;
+    font-family: Helvetica, sans-serif;
+}
+main{
+    display: grid;
+    justify-content: center;
+    align-items:center;
+    margin-top: 150px;
+}
+.error{
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+}
+strong{
+    color: #0b3b3e;
+}

@@ -17,8 +17,7 @@ load_dotenv()
 
 app = Flask(__name__)
 uri = os.getenv("DATABASE_URL", "sqlite:///mednear.db")
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
+uri = uri.replace("postgres://", "postgresql://", 1)
 app.config["SQLALCHEMY_DATABASE_URI"] = uri
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["LOGIN_VIEW"] = "login"
@@ -27,7 +26,7 @@ migrate = Migrate(app, base)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
+print(uri)
 @login_manager.user_loader
 def login_2(user_id):
     restorno = base.session.get(Farmacia, int(user_id))
@@ -56,15 +55,14 @@ month = months[month - 1]
 
 def log(acao, tipo):
     his = Historia(
-        data=date.today(),
+        data=str(date.today()),
         user_id=current_user.id,
         tipo=tipo,
         descricao=acao,
-        hora=datetime.now().strftime("%H:%M:%S")
+        hora=str(datetime.now().strftime("%H:%M:%S"))
     )
     base.session.add(his)
     base.session.commit()
-
 
 @app.route("/hora", methods = ["GET", "POST"])
 def hora():
@@ -76,9 +74,10 @@ def hora():
 @login_required
 def home():
     if request.method == "GET":
-        historico = base.session.query(Historia).filter(Historia.user_id == current_user.id, Historia.data == date.today()).all()
+        funcionario = base.session.query(Funcionario).filter_by(nome=session.get("funcionario_nome"), user_id=current_user.id).scalar()
+        historico = base.session.query(Historia).filter(Historia.user_id == current_user.id, Historia.data == str(date.today())).all()
         med = Medicamento.query.filter_by(user_id = current_user.id).all()
-        vlr_inventario = base.session.query(func.sum(Medicamento.quantidade).filter(Medicamento.user_id == current_user.id)).scalar() or 0 # type: ignore
+        vlr_inventario = base.session.query(func.sum(Medicamento.quantidade).filter(Medicamento.user_id == current_user.id)).scalar() or 0
         valor_em_stock = base.session.query(func.sum(Medicamento.preço * Medicamento.quantidade).filter(Medicamento.user_id == current_user.id)).scalar() or 0 #type: ignore
         return render_template(
             "base.html",
@@ -91,13 +90,13 @@ def home():
             vlr_inventario = vlr_inventario,
             valor_em_stock = valor_em_stock,
             user = current_user,
-            funcionario = session.get('funcionario_nome')
+            funcionario = funcionario
             )
     return render_template(
         "base.html",
         )
 
-@app.route("/", methods = ["GET", "POST"])
+@app.route("/sign-in", methods = ["GET", "POST"])
 def registrar():
     if request.method == 'POST':
         nome = request.form.get('nome_farmacia')
@@ -120,11 +119,11 @@ def registrar():
         base.session.commit()
         farmacia = Farmacia.query.filter_by(email=email).first()
         login_user(farmacia)
-        log(f'Farmácia {farmacia.nome} Criou uma conta', 'Conta criada') # pyright: ignore[reportOptionalMemberAccess]
-        return redirect(url_for('home'))
+        log(f'Farmácia {farmacia.nome} Criou uma conta', 'Conta criada')
+        return redirect(url_for('gerente_funcionarios'))
 
     return render_template("registrar.html")
-@app.route("/login", methods = ["GET", "POST"])
+@app.route("/", methods = ["GET", "POST"])
 def login():
     if request.method == "POST":
         entr_email = request.form.get("email")
@@ -132,11 +131,10 @@ def login():
         senha = entr_senha if entr_senha else ""
         email = entr_email if entr_email else ""
         farmacia = Farmacia.query.filter_by(email=email).first()
-        if farmacia and check_password_hash(farmacia.senha, senha): # type: ignore
+        if farmacia and check_password_hash(farmacia.senha, senha): 
             login_user(farmacia)
             log(f'Farmácia {farmacia.nome} Efetuou login', 'login')
-            print("Login efetuado com sucesso!success")
-            return redirect(url_for('home'))
+            return redirect(url_for('gerente_funcionarios'))
         else:
             flash("Email ou senha incorretos.")
     return render_template(
@@ -194,7 +192,7 @@ def estatistics():
         if medicamento:
             if medicamento.quantidade >= quantidade:
                 medicamento.quantidade -= quantidade
-                registro_de_vendidos = Vendas(nome=nome_medicamento, hora=datetime.now().strftime("%H:%M:%S"), quantidade=quantidade, user_id=current_user.id, data=date.today(), obs=obs, preço=preco, categoria=medicamento.categoria, adicionado_por_id=session.get("funcionario_id"), funcionario=funionario)
+                registro_de_vendidos = Vendas(nome=nome_medicamento, hora=str(datetime.now().strftime("%H:%M:%S")), quantidade=quantidade, user_id=current_user.id, data=str(date.today()), obs=obs, preço=preco, categoria=medicamento.categoria, adicionado_por_id=session.get("funcionario_id"), funcionario=funionario)
                 base.session.add(registro_de_vendidos)
                 base.session.commit()
                 log(f"{session.get('funcionario_nome')} vendeu {quantidade}unid. de {nome_medicamento}", "Venda")
@@ -203,72 +201,74 @@ def estatistics():
         func.count(Medicamento.id).label('total_tipos'),
         func.sum(Medicamento.preço * Medicamento.quantidade).label('valor_total') 
     ).group_by(Medicamento.categoria).filter(Medicamento.user_id == current_user.id).all()
-
-    nome = {
-        'nome':[],
-        'valor':[]
-    }
-    for x in att:
-        nome["nome"].append(x.categoria)
-        nome["valor"].append(x.valor_total)
-
-    produtos_em_stock = {
-        "nome":[],
-        "quantidade":[]
-    }
     product = base.session.query(
         Medicamento.nome, 
         func.sum(Medicamento.quantidade).label('quantidade') 
     ).group_by(Medicamento.nome).filter(Medicamento.user_id == current_user.id).filter(Medicamento.quantidade < 11).all() 
-    for x in product:
-        produtos_em_stock["nome"].append(x.nome)
-        produtos_em_stock["quantidade"].append(x.quantidade)
-        
-    vlr_inventario = base.session.query(func.sum(Medicamento.quantidade).filter(Medicamento.user_id == current_user.id)).scalar() or 0 
-    valor_em_stock = base.session.query(func.sum(Medicamento.preço * Medicamento.quantidade).filter(Medicamento.user_id == current_user.id)).scalar() or 0 
-    
-    
+    vlr_inventario = base.session.query(func.sum(Medicamento.quantidade).filter(Medicamento.user_id == current_user.id)).scalar() or 0
+    valor_em_stock = base.session.query(func.sum(Medicamento.preço * Medicamento.quantidade).filter(Medicamento.user_id == current_user.id)).scalar() or 0
     vendidos_dia = base.session.query(
         Vendas.categoria,
         func.count(Vendas.id).label("total"),
         func.sum(Vendas.preço * Vendas.quantidade).label("valor_total")
-    ).group_by(Vendas.categoria).filter(Vendas.user_id == current_user.id, Vendas.data == date.today()).all()
-
-    med_vendidos = {
-        'Quantidade':[],
-        'categoria':[],
-        'valor_total':[]
+    ).group_by(Vendas.categoria).filter(Vendas.user_id == current_user.id, Vendas.data == str(date.today())).all()
+    
+    category = {
+        'nome':[x.categoria for x in att],
+        'valor_total':[x.valor_total for x in att],
     }
-
-    for x in vendidos_dia:
-        med_vendidos["categoria"].append(x.categoria)
-        med_vendidos["Quantidade"].append(x.total)
-        med_vendidos["valor_total"].append(x.valor_total)
-
+    produtos = {
+        'nome':[x.nome for x in product],
+        'quantidade':[x.quantidade for x in product],
+    }
+    vendas_dia = {
+        'categoria':[x.categoria for x in vendidos_dia],
+        'total':[x.total for x in vendidos_dia],
+        'valor_total':[x.valor_total for x in vendidos_dia],
+    }
+    
+    funcionario = base.session.query(Funcionario).filter_by(nome=session.get("funcionario_nome"), user_id=current_user.id).scalar()
     return render_template(
         "estatistics.html",
         user = current_user,
         vlr_inventario = vlr_inventario,
         valor_em_stock = valor_em_stock,
-        valor = nome["valor"],
-        nome = nome["nome"],
-        produto = produtos_em_stock["nome"],
-        quantidade = produtos_em_stock["quantidade"],
-        categoria_nome = med_vendidos["categoria"],
-        categoria_vendas = med_vendidos["Quantidade"],
-        funcionario = session.get('funcionario_nome')
+        categoria = category,
+        produtos = produtos,
+        vendas_dia = vendas_dia,
+        funcionario = funcionario
     )
 
 @app.route('/imprimir')
 @login_required
 def imprimir_relatorio():
-    total_vendas = base.session.query(func.sum(Vendas.quantidade * Vendas.preço).filter(Vendas.user_id == current_user.id,)).filter(Vendas.user_id == current_user.id).scalar() or 0
+    valor_vendas = base.session.query(func.sum(Vendas.quantidade * Vendas.preço).filter(Vendas.user_id == current_user.id, Vendas.data == date.today())).scalar()
+    vendas_dia = base.session.query(func.count(Vendas.id).filter(Vendas.user_id == current_user.id, Vendas.data == str(date.today()))).scalar()
+    nomes = base.session.query(
+        Vendas.nome,
+        Vendas.categoria,
+        func.count(Vendas.id).label('total'),
+        func.sum(Vendas.preço * Vendas.quantidade).label("valor_total"),
+    ).group_by(Vendas.nome).filter(Vendas.user_id == current_user.id, Vendas.data == str(date.today())).all()
+    
+    todos = {
+        'nome':[],
+        'categoria':[],
+        'quantidade':[],
+        'valor':[],
+    }
+    for x in nomes:
+        todos["nome"].append(x.nome)
+        todos["categoria"].append(x.categoria)
+        todos["quantidade"].append(x.total)
+        todos["valor"].append(x.valor_total)
+
     gerar_relatorio = GerarRelatorios(
-        quantidade=Vendas.quantidade,
+        quantidade=vendas_dia,
         nome=current_user.nome,
-        medicamentos=Vendas.nome,
-        valor=total_vendas,
-        dia=date.today()
+        medicamentos=nomes,
+        valor=valor_vendas,
+        dia=str(date.today())
         )
     return ''
 
@@ -276,32 +276,43 @@ def imprimir_relatorio():
 @login_required
 def definicoes():
     if request.method == "POST":
-        nome = request.form.get('Nome')
-        senha = request.form.get('Senha')
-        nivel = request.form.get('Nivel')
-        tel = request.form.get('Tel')
-        funcionario = Funcionario(nome=nome, user_id=current_user.id, senha=senha, nivel_acesso=nivel, telefone_whatsapp=tel)
-        base.session.add(funcionario)
-        base.session.commit()
-        return redirect(url_for('definicoes'))
+        try:
+            nome = request.form.get('Nome')
+            senha = request.form.get('Senha')
+            nivel = request.form.get('Nivel')
+            tel = request.form.get('Tel')
+            funcionario = Funcionario(nome=nome, user_id=current_user.id, senha=senha, nivel_acesso=nivel, telefone_whatsapp=tel)
+            base.session.add(funcionario)
+            base.session.commit()
+            log(f'Foi adicionado mais um funcionário', 'login')
+            return redirect(url_for('definicoes'))
+        except AttributeError:
+            return redirect(url_for("erro", erro='um'))
     todos_funcionario = base.session.query(Funcionario).filter(Funcionario.user_id == current_user.id)
+    funcionario = base.session.query(Funcionario).filter_by(nome=session.get("funcionario_nome"), user_id=current_user.id).scalar()
     return render_template(
         'definicoes.html',
         user = current_user,
         lista_funcionarios = todos_funcionario,
-        funcionario = session.get('funcionario_nome')
+        funcionario = funcionario
     )
+
 @app.route("/definicoes/verificar-funcionario", methods = ["POST"])
+@login_required
 def verificar():
     if request.method == "POST":
-        check_box = request.form.get('nome')
-        nome = check_box
-        session["funcionario_nome"] = nome
-        funcionario = Funcionario.query.filter_by(user_id = current_user.id, nome = nome).first()
-        session["funcionario_id"] = funcionario.id
-        
-    return redirect(url_for('definicoes'))
+        try:
+            check_box = request.form.get('nome')
+            nome = check_box
+            session["funcionario_nome"] = nome
+            funcionario = Funcionario.query.filter_by(user_id = current_user.id, nome = nome).first()
+            session["funcionario_id"] = funcionario.id
+            return redirect(url_for('home'))
+        except AttributeError:
+            return redirect(url_for("erro", erro='um'))
+
 @app.route('/definicoes/apagar-funcionario', methods = ["POST", "GET"])
+@login_required
 def excluir_nome():
     nome = request.form.get('Nome')
     medicamento = Funcionario.query.filter_by(
@@ -316,7 +327,69 @@ def excluir_nome():
         flash("Medicamento não encontrado.")
 
     return redirect(url_for('definicoes'))
+
+@app.route('/adicionar-funcionario', methods = ["POST", "GET"])
+@login_required
+def gerente_funcionarios():
+    lista = base.session.query(Funcionario).filter(Funcionario.user_id == current_user.id).all()
+    if request.method == 'POST':
+        if lista:
+            check_box = request.form.get('nome')
+            nome = check_box
+            session["funcionario_nome"] = nome
+            funcionario = Funcionario.query.filter_by(user_id = current_user.id, nome = nome).first()
+            session["funcionario_id"] = funcionario.id
+            log(f'Farmácia {session.get("funcionario_nome")} está ativo', 'login')
+            return redirect(url_for('home'))
+        else:
+            nome = request.form.get('Nome')
+            senha = request.form.get('Senha')
+            tel = request.form.get('Tel')
+            funcionario = Funcionario(nome=nome, user_id=current_user.id, senha=senha, nivel_acesso=2, telefone_whatsapp=tel)
+            base.session.add(funcionario)
+            base.session.commit()
+            log(f'Farmácia {session.get('funcionario_nome')} está ativo', 'login')
+            return redirect(url_for('gerente_funcionarios'))
+    if request.method == "GET":
+        return render_template(
+            'gerente_funcionarios.html',
+            lista_func = lista,
+            user  = current_user
+        )
+
+@app.route('/erro/<string:erro>', methods = ["POST", "GET"])
+def erro(erro):
+    if erro == 'um':
+        return render_template('erros/erro_um.html')
+    elif erro == "dois":
+        return render_template('erros/erro_dois.html')
+@app.route('/historia', methods = ["POST", "GET"])
+@login_required
+def historia():
+    try:
+        historico = base.session.query(Historia).filter(Historia.user_id == current_user.id).all()
+        funcionario = base.session.query(Funcionario).filter_by(nome=session.get("funcionario_nome"), user_id=current_user.id).scalar()
+        actividades_funcionarios = base.session.query(
+            Vendas.nome,
+            func.sum(Vendas.quantidade).label("quantidade"),
+            func.sum(Vendas.quantidade * Vendas.preço).label("valor"),
+            ).group_by(Vendas.nome).filter(Vendas.user_id == current_user.id, Vendas.funcionario == funcionario, Vendas.data == str(date.today())).all()
+        valor = base.session.query(func.sum(Vendas.quantidade * Vendas.preço)).filter(Vendas.user_id == current_user.id, Vendas.funcionario == funcionario, Vendas.data == str(date.today())).scalar() or 0
+        total = base.session.query(func.count(Vendas.id)).filter(Vendas.user_id == current_user.id, Vendas.funcionario == funcionario, Vendas.data == str(date.today())).scalar() or 0
+        
+        return render_template(
+        'historia.html',
+        user = current_user,
+        lista_historia = historico,
+        historia_funcionario = actividades_funcionarios,
+        funcionario = funcionario,
+        valor_entrado = valor,
+        Vendas_feitas = total
+    )
+    except TypeError:
+        return redirect(url_for("erro", erro='dois'))
+
 if __name__ == "__main__":
     with app.app_context():
         base.create_all()
-    app.run()
+    app.run(debug=True)

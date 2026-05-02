@@ -6,7 +6,7 @@
     <title>Document</title>
     <style>
         body{
-            padding: 20px;
+            padding: 10px;
             font-family: Arial;
             display: grid;
             justify-content: center;
@@ -19,16 +19,16 @@
     </style>
 </head>
 <body>
-    <h1>
-        Relatorios de venda da Farmácia {{ nome }} do dia {{ dia }}
-    </h1>
+    <h2>
+        Relatorio de venda da Farmácia {{ nome }} do dia {{ dia }}
+    </h2>
     <div>
-        <strong>
+        <p>
             No dia de {{ dia }} foram registradas {{ quantidade }} Vendas.
-        </strong>
+        </p>
     </div>
     <div>
-        <strong>Aqui está uma lista dos medicamentos vendidos Hoje:</strong>
+        <p>Aqui está uma lista dos medicamentos vendidos Hoje:</p>
     </div>
     <div class="lista">
         <table>
@@ -37,7 +37,7 @@
                     <th>Nome</th>
                     <th>Categoria</th>
                     <th>Quantidade</th>
-                    <th>Preço</th>
+                    <th>Valor total</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,27 +45,27 @@
                 <tr>
                     <td> {{x.nome}} </td>
                     <td> {{x.categoria}} </td>
-                    <td> {{x.quantidade}} </td>
-                    <td> {{x.preço}} </td>
+                    <td> {{x.total}} </td>
+                    <td> {{x.valor_total}} </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     <div>
-        <strong>
-            O  total de Vendas de {{ data }} deixou um saldo final de {{ valor }} Kzs.
-        </strong>    
+        <p>
+            O  total de Vendas de {{ dia }} deixou um saldo final de {{ valor }} Kzs.
+        </p>    
     </div>
     <div>
-        <strong>
+        <p>
             Os medicamentos com estock abaixo de 10, são:
-        </strong>
+        </p>
     </div>
     <div>
-        <strong>
+        <p>
             Estes são os produtos mais vendidos:
-        </strong>
+        </p>
     </div>
 </body>
 </html>

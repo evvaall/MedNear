@@ -1,9 +1,10 @@
 
     {% extends "base.html" %}
-
+    {% block link%} <link rel="stylesheet" href="{{ url_for('static', filename='stock.css') }}"> {% endblock %}
     {% block content %}
     <div class="content">
-        <div class="tabela">
+        <div class="tabela" style="{{ 'align-items: flex-start;' if lista_medicamentos else 'align-items: center;' }}">
+            {% if lista_medicamentos %}
             <table class="tabela-medicamentos">
                 <thead>
                     <tr>
@@ -16,7 +17,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                        {% for x in lista_medicamentos %}
+                    {% for x in lista_medicamentos %}
                         <tr>
                             <td> {{x.id}} </td>
                             <td> {{x.nome}} </td>
@@ -25,9 +26,15 @@
                             <td class="preco" style="{{ 'color:red;' if x.quantidade < 11 }}"> {{x.quantidade}} </td>
                             <td class="preco"> {{x.validade}} </td>
                         </tr>
-                        {% endfor %}
+                    {% endfor %}
                 </tbody>
-            </table>
+            </table> 
+            {% else %}
+                <div class="vazio">
+                    <strong>Nenhum medicamento adicionado.</strong>
+                    <p>adicione um medicamento.</p>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div class="opcoes">

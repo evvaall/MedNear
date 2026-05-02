@@ -95,7 +95,7 @@ class Historia(base.Model):
 class Funcionario(base.Model):
     __tablename__ = "funcionario"
     id = base.Column(base.Integer, primary_key=True)
-    nome = base.Column(base.String(50), nullable=False, unique=True)
+    nome = base.Column(base.String(50), nullable=False)
     senha = base.Column(base.String(255), nullable=False)
     nivel_acesso = base.Column(base.Integer, nullable=False)
     telefone_whatsapp = base.Column(base.String(15), nullable=False)

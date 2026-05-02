@@ -12,6 +12,4 @@ def GerarRelatorios(nome, quantidade, medicamentos, dia, valor):
         dia = dia,
         valor_total = valor
     )
-    
-    print(quantidade)
     return HTML(string=html_final).write_pdf("relatorio.pdf")

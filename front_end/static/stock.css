@@ -8,11 +8,13 @@
     height: 530px;
 }
 .tabela{
-    width: 680px;
+    width: 730px;
     height:100%;
     background-color: #ffffff;
     box-shadow: 0px 0px 0px 8px #ffffff57;
     color: #0b3b3e;
+    display: flex;
+    align-items: center;
 }
 .tabela table{
     border-collapse: collapse;
@@ -32,8 +34,6 @@
     background-color:  #cbdcf3 !important;
 }
 .tabela td, .tabela th{
-    padding: 8px, 12px;
-    text-align: left;
     width: 100px;
     text-align: center;
     border: 1px solid #d0d0d0;
@@ -150,4 +150,11 @@ form button:hover{
     position: relative;
     top: 5px;
 }
-
+.vazio{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    color: #0b3b3e;
+}

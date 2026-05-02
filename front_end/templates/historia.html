@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block link %} <link rel="stylesheet" href="{{ url_for('static', filename='historia.css') }}"> {% endblock %}
+
+{% block form %}
+
+{% endblock %}
+
+{% block content %}
+<div class="first">
+    <table class="tabela-medicamentos">
+        <thead>
+            <tr>
+                <th class="descricao">Descrição</th>
+                <th>Tipo</th>
+                <th class="preco">Hora</th>
+                <th class="preco">Dia</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for x in lista_historia %}
+                <tr>
+                    <td class="descricao"> {{x.descricao}} </td>
+                    <td class="tipo"> {{ x.tipo}}</td>
+                    <td class="xlm"> {{x.hora}} </td>
+                    <td class="xlm"> {{x.data}} </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="second">
+    {% if funcionario.nome %}
+        <div class="verde">
+            <h3>Actividades de {{funcionario.nome}}</h3>
+        </div>
+        <div class="tabela-por-funcionario" style="{{ 'align-items: flex-start;' if historia_funcionario else 'align-items: center;' }}">
+            {% if historia_funcionario %}
+                <table class="tabela-medicamentos">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Qnt</th>
+                        <th>Valor total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for x in historia_funcionario %}
+                        <tr>
+                            <td class="nome"> {{x.nome}} </td>
+                            <td class="qnt"> {{ x.quantidade }} </td>
+                            <td class="xlm"> {{ "{:,.0f}".format(x.valor).replace(',', '.')}} kz</td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+                </table>
+            {% else %}
+            <div class="vazio">
+                <strong>{{funcionario.nome}} ainda não registrou nenhuma venda hoje.</strong>
+                <p>Venda alguma coisa em "Estatisticas" .</p>
+            </div>
+            {% endif %}
+        </div>
+        <footer>
+            <strong>Total de vendas de {{ funcionario.nome }}: {{Vendas_feitas}}</strong>
+            <br>
+            <strong>Valor entrado: {{ "{:,.0f}".format(valor_entrado).replace(',', '.')}} kz</strong>
+        </footer>
+        <button>Imprimir actividades de {{funcionario.nome}}</button>
+        <button>imprimir actividades da semana</button>
+        <button>Ver gráficos</button>
+    {% else %}
+        <div class="vazio">
+            <strong> Nenhum funcionário selecionado. </strong>
+            <p>Por favor, selecione um funcionário em "Definições" .</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

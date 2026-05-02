@@ -1,0 +1,96 @@
+.first{
+    width: 620px;
+    background-color: #fff;
+    box-shadow: 0px 0px 0px 8px #ffffff57;
+    height: 540px;
+    overflow-y: auto;
+}
+.first tbody{
+    font-size: 14px;
+}
+.xlm{
+    width: 100px;
+    text-align: center;
+}
+table{
+    border-collapse: collapse;
+    color: #0b3b3e;
+    font-size: 13px;
+}
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tbody tr:hover {
+    background-color:  #cbdcf3 !important;
+}
+td, th{
+    border: 1px solid #0b3b3e;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.descricao{
+    width: 280px;
+}
+.qnt{
+    width: 50px;
+    text-align: center;
+}
+.nome{
+    width: 170px;
+}
+.tipo{
+    width: 100px;
+    text-align: right;
+}
+.second{
+    background-color: #fff;
+    width: 350px;
+    height: 545px; 
+    box-shadow: 0px 0px 0px 8px #ffffff57;
+    align-items: center;
+    display: grid; 
+}
+.verde{
+    background-color: #0b3b3e;
+    text-align: center;
+    height: 40px;
+    margin-top: 0;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.verde h3{
+    margin: 0;
+}
+.tabela-por-funcionario{
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: flex-start;
+    height: 360px;
+    overflow-y: auto;
+}
+footer{
+    background-color: #0b3b3e;
+    padding: 10px;
+}
+footer strong{
+    color: #fff;
+}
+.second button{
+    background-color: #0b3b3e;
+    color: #fff;
+    font-weight: bold;
+    border-color: transparent;
+    width: 100%;
+    margin-top: 8px;
+}
+.vazio{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    color: #0b3b3e;
+}

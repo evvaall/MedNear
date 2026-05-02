@@ -5,6 +5,9 @@
     <script src="{{url_for('static', filename='js/chart.min.js')}}"></script>
     {% endblock %} 
     
+    {% block form %}
+
+    {% endblock %}
     
     {% block content %}
     <div class="centro">
@@ -14,16 +17,18 @@
                 <p>
                     Total de medicamentos em Stock:
                 </p>
-                <h3>
-                    {{ vlr_inventario }}
-                </h3>
+                {% if vlr_inventario > 999 %}
+                    <h4>+999</h4>
+                {% else %}
+                    <h3>{{vlr_inventario}}</h3>
+                {% endif %}
             </div>
             <div class="card-3">
                 <p>
                     Valor em Stock:
                 </p>
                 <h3>
-                    {{ "{:,.0f}".format(valor_em_stock).replace(',', '.') }} Kz
+                    {{ "{:,.0f}".format(valor_em_stock).replace(',', '.') }} kz
                 </h3>
             </div>
             <div class="sale">
@@ -51,39 +56,62 @@
         <div class="bottom">
             <div class="graphics">
                 <div class="figure-1">
-                    <canvas id="grafico_categoria" width="610px" height="190px"></canvas>
+                    {% if categoria["valor_total"] %}
+                        <canvas id="grafico_categoria" width="610px" height="190px"></canvas>
+                    {% else %}
+                        <div class="vazio">
+                            <strong>Nenhum medicamento adicionado.</strong>
+                            <p>adicione um medicamentos em "Ver stock" .</p>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="figure-2">
-                    <canvas id="grafico_stock" width="610px" height="190px"> </canvas>
+                    <div class="dognouth">
+                        {% if produtos['nome'] %}
+                        <canvas id="grafico_stock" width="610px" height="190px"> </canvas>
+                        {% else %}
+                            <div class="vazio">
+                                <strong>Nenhum medicamento com Stoque abaixo de 10.</strong>
+                                <p>adicione um medicamentos em "Ver stock" .</p>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="figure-3">
                 <div class="dognouth">
-                    <canvas id="polarars"></canvas>
+                    {% if vendas_dia['categoria'] %}
+                        <canvas id="polarars"></canvas>
+                    {% else %}
+                        <div class="vazio">
+                            <strong>Nenhum medicamento Vendido hoje.</strong>
+                            <p>Venda um medicamentos.</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    <div id="modalVenda" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-        <div style="background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 30%; border-radius: 8px;">
+    <div id="modalVenda" class="div-add">
+        <div class="add-funcionario">
             <h2 id="modalNome">Vender Medicamento</h2>
             
-            <form id="formVenda" method="POST" action="{{url_for('estatistics')}}" style="display: grid;">
+            <form id="formVenda" method="POST" action="{{url_for('estatistics')}}" >
                 <input type="text" name="Nome" required placeholder="Nome do medicamento:">
                 <input type="number" name="Preço" id="inputQtd"  placeholder="Digite o preço:" required>
                 <input type="number" name="Quantidade" id="inputQtd" value="1" min="1" placeholder="Quantidade:" required>
                 <input type="text" name="Obs" placeholder="Observação:">
-                <div style="margin-top: 20px;">
-                    <button type="submit" style="background: green; color: white; padding: 10px;">Confirmar Venda</button>
-                    <button type="button" onclick="fecharModal()" style="background: red; color: white; padding: 10px;">Cancelar</button>
+                <div class="dois-botoes">
+                    <button type="submit" class="submit">Confirmar Venda</button>
+                    <button type="button" onclick="fecharModal()" class="cancelar">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/stock.js') }}"></script>
     <script >
-        const label = {{ nome | tojson | safe }};
-        const value = {{ valor | tojson | safe }};
+        const label = {{ categoria['nome'] | tojson | safe }};
+        const value = {{ categoria['valor_total'] | tojson | safe }};
         const graphic = document.getElementById("grafico_categoria");
         
         new Chart(graphic, {
@@ -107,8 +135,8 @@
                 }
             });
         
-        const produtos = {{ produto | tojson }};
-        const stock = {{ quantidade | tojson }};
+        const produtos = {{ produtos['nome'] | tojson | safe }};
+        const stock = {{ produtos['quantidade'] | tojson | safe }};
         const grafico_stock = document.getElementById("grafico_stock");
         new Chart(
             grafico_stock, {
@@ -133,11 +161,11 @@
             graphic_polar, {
                 type:'polarArea',
                 data:{
-                    labels:{{ categoria_nome | tojson }},
+                    labels:{{ vendas_dia['categoria'] | tojson }},
                     datasets:[
                     {
                         label:'Produtos vendidos hoje',
-                        data:{{ categoria_vendas | tojson }},
+                        data:{{ vendas_dia['total'] | tojson }},
                         backgroundColor:[
                         '#0b3b3e', '#cc7f0e'
                         ],

@@ -1,81 +1,101 @@
     {% extends "base.html" %}
     {% block link%} <link rel="stylesheet" href="{{ url_for('static', filename='definicoes.css') }}"> {% endblock %}
+    
+    {% block form %}
+    <div class="funcionario-ativo">
+        <div class="img-ativo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#fff" width="20" height="20"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"/></svg>
+        </div>
+        <div class="dados-ativo">
+            <h3 class="nome">{{ funcionario.nome }}</h3>
+        </div>
+    </div>
+    {% endblock %}
+
     {% block content %}
     <div class="defini-geral">
-        <div class="div-primaria">
-            <div class="aparencia">
-                <h2>Aparência</h2>
-                <form action="{{ url_for('definicoes') }}" method="post">
-                    <label>
-                        Claro: <input type="checkbox"  class="tema" value="Claro"> 
-                    </label>
-                
-                    <label>
-                        Escuro: <input type="checkbox" class="tema" value="Escuro">
-                    </label>
-                </form>
-            </div>
-            <div class="div-imagem">
-                <img src="{{url_for('static', filename='img/pexels-karola-g-4021775.webp')}}"  alt="Saiba mais sobre nós" class="img_service">
-                <h4>Saiba mais sobre nós.</h4>
-                <p>Conheça outros serviços que prestamos...</p>
-                <button>
-                    <a href="evvaall.github.io">Ver site</a>
-                </button>
-            </div>
+        <div class="aparencia">
+            <h2>Aparência</h2>
+            <form action="{{ url_for('definicoes') }}" method="post">
+                <label>
+                    Claro: <input type="checkbox"  class="tema" value="Claro"> 
+                </label>
+            
+                <label>
+                    Escuro: <input type="checkbox" class="tema" value="Escuro">
+                </label>
+            </form>
         </div>
         <div class="funcionarios">
             <h2>Funcionários</h2>
-            <button onclick="addFuncinario()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#000" width="24" height="24"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-            </button>
-            <button onclick="deleteFuncinario()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#000" width="24" height="24"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"/></svg>
-            </button>
-            <form action="{{ url_for('verificar') }}" method="POST">
+            <div class="div-primaria">
+                <button onclick="addFuncinario()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#fff" width="20" height="20"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                    Adicionar
+                </button>
+                <button onclick="deleteFuncinario()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#fff" width="20" height="20"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"/></svg>
+                    Apagar
+                </button>
+            </div>
+            <form action="{{ url_for('verificar') }}" method="POST" class="form-funcionarios">
                 {% for funcionario in lista_funcionarios %}
-                    <div class="foto"></div>
-                    <label>
-                        {{ funcionario.nome }} <input type="checkbox" name="nome" class="nome" value="{{ funcionario.nome }}">
-                    </label>
+                    <div class="func">
+                        <div class="img">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#0b3b3e" width="22" height="22"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"/></svg>
+                        </div>
+                        <div class="dados">
+                            <div class="mais-info">
+                                <p class="cargo">{{ 'Gerente' if funcionario.nivel_acesso == 2 else 'Funcionário' }}</p>
+                                <h3> {{ funcionario.telefone_whatsapp }} </h3>
+                            </div>
+                            <h3 class="nome">{{ funcionario.nome }}</h3>
+                        </div>
+                        <input type="checkbox" name="nome" class="checkbox" value="{{ funcionario.nome }}">
+                    </div>
                 {% endfor %}
                 <button type="submit">Salvar</button>
             </form>
         </div>
         <div class="pagamentos">
             <h2>Métodos de pagamento</h2>
+            <p>Pagar Via Multicaixa Express</p>
+            <p>Pagar Via Unitel Money</p>
+            <p>Pagar Via AfriMoney</p>
         </div>
         <div class="conta-principal">
             <h2>Conta principal</h2>
-            <button>mudar senha</button>
-            <button>apagar conta</button>
+            {% if funcionario.nivel_acesso == 2 %}
+                <button>mudar senha</button>
+                <button>apagar conta</button>
+            {% endif %}
             <button>ver mais informações</button>
         </div>
     </div>
-    <div id="modaladdfuncionario" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-        <div style="background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 30%; border-radius: 12px;">
-            <h2 id="modalNome">Vender Medicamento</h2>
+    <div id="modaladdfuncionario" class="div-add">
+        <div class="add-funcionario">
+            <h2 id="modalNome">Adicionar Funcionários</h2>
             <form id="formVenda" method="POST" action="{{url_for('definicoes')}}" style="display: grid;">
                 <input type="text" name="Nome" required placeholder="Nome do Funcionário:">
                 <input type="number" name="Tel" required placeholder="Telefone/Whatsapp:">
                 <input type="number" name="Nivel" required placeholder="Nível de acesso:">
                 <input type="text" name="Senha" required placeholder="Senha:">
                 
-                <div style="margin-top: 20px;">
-                    <button type="submit" style="background: green; color: white; padding: 10px;">Confirmar</button>
-                    <button type="button" onclick="fecharModal()" style="background: red; color: white; padding: 10px;">Cancelar</button>
+                <div class="dois-botoes">
+                    <button type="submit" class="submit">Confirmar</button>
+                    <button type="button" onclick="fecharModal()" class="cancelar">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
-    <div id="modaldeletefuncionario" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-        <div style="background-color: white; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 30%; border-radius: 12px;">
+    <div id="modaldeletefuncionario" class="div-add">
+        <div class="add-funcionario">
             <h2 id="modalNome">Remover Funcionário</h2>
             <form id="formVenda" method="POST" action="{{url_for('excluir_nome')}}" style="display: grid;">
                 <input type="text" name="Nome" required placeholder="Nome do Funcionário:">
-                 <div style="margin-top: 20px;">
-                    <button type="submit" onclick="return confirm('Tem Certeza disso?')" style="background: green; color: white; padding: 10px;">Confirmar</button>
-                    <button type="button" onclick="fecharModal()" style="background: red; color: white; padding: 10px;">Cancelar</button>
+                 <div class="dois-botoes">
+                    <button type="submit" onclick="return confirm('Tem Certeza que pretende apagar mesmo?')" class="submit">Confirmar</button>
+                    <button type="button" onclick="fecharModal()" class="cancelar">Cancelar</button>
                 </div>
             </form>
         </div>
