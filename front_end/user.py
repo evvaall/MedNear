@@ -339,7 +339,7 @@ def gerente_funcionarios():
             session["funcionario_nome"] = nome
             funcionario = Funcionario.query.filter_by(user_id = current_user.id, nome = nome).first()
             session["funcionario_id"] = funcionario.id
-            log(f'Farmácia {session.get("funcionario_nome")} está ativo', 'login')
+            log(f"Farmácia {session.get('funcionario_nome')} está ativo", 'login')
             return redirect(url_for('home'))
         else:
             nome = request.form.get('Nome')
@@ -348,7 +348,7 @@ def gerente_funcionarios():
             funcionario = Funcionario(nome=nome, user_id=current_user.id, senha=senha, nivel_acesso=2, telefone_whatsapp=tel)
             base.session.add(funcionario)
             base.session.commit()
-            log(f'Farmácia {session.get('funcionario_nome')} está ativo', 'login')
+            log(f"Farmácia {session.get('funcionario_nome')} está ativo", 'login')
             return redirect(url_for('gerente_funcionarios'))
     if request.method == "GET":
         return render_template(
